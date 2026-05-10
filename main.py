@@ -35,6 +35,10 @@ oauth2_schema = OAuth2PasswordBearer(tokenUrl="autentificare")
 # ---------------------------------------------------------------------------
 
 def initializeaza_db():
+    director_db = os.path.dirname(DATABASE_PATH)
+    if director_db:
+        os.makedirs(director_db, exist_ok=True)
+
     conn = sqlite3.connect(DATABASE_PATH)
 
     conn.execute("""
@@ -62,6 +66,7 @@ def initializeaza_db():
 
 
 def get_db():
+    initializeaza_db()
     conn = sqlite3.connect(DATABASE_PATH, check_same_thread=False)
     conn.row_factory = sqlite3.Row
     try:
