@@ -20,7 +20,8 @@ from pydantic import BaseModel, Field, field_validator
 
 load_dotenv()
 
-DATABASE_PATH = os.environ.get("DATABASE_PATH", "sarcini.db")
+DEFAULT_DATABASE_PATH = "/tmp/sarcini.db" if os.environ.get("VERCEL") else "sarcini.db"
+DATABASE_PATH = os.environ.get("DATABASE_PATH", DEFAULT_DATABASE_PATH)
 SECRET_KEY = os.environ.get("SECRET_KEY", "cheie-dev-de-inlocuit")
 ALGORITHM = os.environ.get("ALGORITHM", "HS256")
 EXPIRARE_TOKEN_MINUTE = int(os.environ.get("EXPIRARE_TOKEN_MINUTE", "30"))
