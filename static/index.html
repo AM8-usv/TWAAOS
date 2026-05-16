@@ -3,440 +3,400 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestionar de sarcini</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <title>TaskFlow — Gestionar de Sarcini</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest:  '#002400',
+                        coral:   '#db504a',
+                        gold:    '#e3b505',
+                        muted:   '#4f6d7a',
+                        ocean:   '#56a3a6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
-<body>
+<body class="font-sans antialiased bg-white text-gray-900">
 
-<nav class="navbar navbar-dark bg-primary">
-    <div class="container">
-        <span class="navbar-brand fw-bold">Gestionar de sarcini</span>
-        <div id="info-utilizator" class="d-none align-items-center gap-3">
-            <span id="email-utilizator" class="text-white small"></span>
-            <span id="contor-sarcini" class="badge bg-light text-primary">0 sarcini / 0 finalizate</span>
-            <button class="btn btn-outline-light btn-sm" onclick="deconecteaza()">Deconectare</button>
+    <!-- ======================================================
+         NAVBAR
+    ====================================================== -->
+    <nav class="bg-forest sticky top-0 z-50 shadow-lg">
+        <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-8 h-8 bg-gold rounded-lg flex items-center justify-center">
+                    <svg class="w-5 h-5 text-forest" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="text-white text-xl font-bold tracking-tight">TaskFlow</span>
+            </div>
+            <div class="hidden sm:flex items-center gap-6">
+                <a href="#functionalitati" class="text-white/70 hover:text-white text-sm font-medium transition-colors">Funcționalități</a>
+                <a href="#tehnologii" class="text-white/70 hover:text-white text-sm font-medium transition-colors">Tehnologii</a>
+                <a href="#autor" class="text-white/70 hover:text-white text-sm font-medium transition-colors">Autor</a>
+            </div>
+            <a href="/app.html"
+               class="bg-coral hover:bg-coral/90 active:scale-95 text-white px-5 py-2 rounded-lg font-semibold text-sm transition-all shadow-md">
+                Intră în Aplicație →
+            </a>
         </div>
-    </div>
-</nav>
+    </nav>
 
-<div class="container mt-4">
+    <!-- ======================================================
+         HERO
+    ====================================================== -->
+    <section class="bg-forest text-white">
+        <div class="max-w-6xl mx-auto px-6 pt-20 pb-28 grid md:grid-cols-2 gap-12 items-center">
+            <!-- Text -->
+            <div>
+                <div class="inline-flex items-center gap-2 bg-ocean/20 text-ocean px-4 py-1.5 rounded-full text-sm font-medium mb-8">
+                    <span class="w-2 h-2 bg-ocean rounded-full animate-pulse"></span>
+                    Lab 5 · TWAAOS · USV Suceava
+                </div>
+                <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
+                    Organizează-ți<br>
+                    sarcinile<br>
+                    <span class="text-gold">eficient.</span>
+                </h1>
+                <p class="text-white/70 text-lg leading-relaxed mb-10 max-w-md">
+                    TaskFlow este o aplicație web cu autentificare securizată JWT,
+                    operații CRUD complete și filtrare în timp real — totul într-o
+                    interfață curată și responsivă.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4">
+                    <a href="/app.html"
+                       class="bg-coral hover:bg-coral/90 active:scale-95 text-white px-8 py-3.5 rounded-xl font-bold text-lg transition-all shadow-lg text-center">
+                        Începe acum
+                    </a>
+                    <a href="#functionalitati"
+                       class="border-2 border-ocean/50 hover:border-ocean text-ocean hover:text-white hover:bg-ocean px-8 py-3.5 rounded-xl font-bold text-lg transition-all text-center">
+                        Află mai mult
+                    </a>
+                </div>
+            </div>
 
-    <!-- -------- Sectiunea de autentificare -------- -->
-    <div id="sectiune-auth">
-        <div class="row justify-content-center">
-            <div class="col-md-5">
-
-                <!-- Formularul de inregistrare -->
-                <div id="form-inregistrare" class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Înregistrare</h5>
-                        <div id="eroare-inregistrare" class="alert alert-danger d-none"></div>
-                        <div id="succes-inregistrare" class="alert alert-success d-none"></div>
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" id="reg-email" class="form-control">
+            <!-- App Preview Card -->
+            <div class="relative hidden md:block">
+                <div class="bg-white/10 backdrop-blur rounded-2xl p-6 border border-white/20 shadow-2xl">
+                    <div class="flex items-center gap-2 mb-5">
+                        <div class="w-3 h-3 rounded-full bg-coral"></div>
+                        <div class="w-3 h-3 rounded-full bg-gold"></div>
+                        <div class="w-3 h-3 rounded-full bg-ocean"></div>
+                        <span class="text-white/40 text-xs ml-2">taskflow / sarcinile-mele</span>
+                    </div>
+                    <!-- Mock tasks -->
+                    <div class="space-y-3">
+                        <div class="bg-white/10 rounded-xl p-3 flex items-center justify-between">
+                            <div>
+                                <p class="text-white font-medium text-sm">Finalizare proiect TWAAOS</p>
+                                <p class="text-white/50 text-xs">Lab 5 — FastAPI + JWT</p>
+                            </div>
+                            <span class="bg-ocean/30 text-ocean text-xs px-2 py-0.5 rounded-full font-medium">Finalizată</span>
                         </div>
-                        <div class="mb-3">
-                            <label class="form-label">Parolă</label>
-                            <input type="password" id="reg-parola" class="form-control">
+                        <div class="bg-white/10 rounded-xl p-3 flex items-center justify-between">
+                            <div>
+                                <p class="text-white font-medium text-sm">Pregătit examen POO</p>
+                                <p class="text-white/50 text-xs">Capitolele 3-7</p>
+                            </div>
+                            <span class="bg-muted/30 text-white/60 text-xs px-2 py-0.5 rounded-full font-medium">În progres</span>
                         </div>
-                        <button class="btn btn-primary w-100" onclick="inregistreaza()">Înregistrează-te</button>
-                        <p class="text-center mt-3 mb-0">
-                            Ai deja cont? <a href="#" onclick="comutaFormular(); return false;">Autentifică-te</a>
+                        <div class="bg-white/10 rounded-xl p-3 flex items-center justify-between">
+                            <div>
+                                <p class="text-white font-medium text-sm">Referat Baze de Date</p>
+                                <p class="text-white/50 text-xs">Capitolul normalizare</p>
+                            </div>
+                            <span class="bg-muted/30 text-white/60 text-xs px-2 py-0.5 rounded-full font-medium">În progres</span>
+                        </div>
+                        <div class="border-t border-white/10 pt-3 flex items-center gap-2">
+                            <div class="flex-1 bg-white/10 rounded-lg px-3 py-1.5">
+                                <p class="text-white/30 text-xs">Adaugă o sarcină nouă...</p>
+                            </div>
+                            <div class="bg-gold/80 rounded-lg px-3 py-1.5">
+                                <p class="text-forest text-xs font-semibold">+ Adaugă</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Decorative glow -->
+                <div class="absolute -bottom-6 -right-6 w-32 h-32 bg-gold/10 rounded-full blur-2xl pointer-events-none"></div>
+            </div>
+        </div>
+
+        <!-- Wave divider -->
+        <div class="w-full overflow-hidden">
+            <svg viewBox="0 0 1440 60" preserveAspectRatio="none" class="w-full h-12 fill-white">
+                <path d="M0,40 C360,80 1080,0 1440,40 L1440,60 L0,60 Z"/>
+            </svg>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         FEATURES
+    ====================================================== -->
+    <section id="functionalitati" class="py-20 px-6">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-14">
+                <p class="text-ocean font-semibold text-sm uppercase tracking-widest mb-3">Ce oferă aplicația</p>
+                <h2 class="text-4xl font-extrabold text-forest mb-4">Funcționalități principale</h2>
+                <p class="text-muted text-lg max-w-xl mx-auto">
+                    Toate instrumentele necesare pentru a gestiona sarcinile zilnice cu ușurință și eficiență.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Feature: Auth -->
+                <div class="group bg-white rounded-2xl p-7 shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 bg-forest/5 rounded-xl flex items-center justify-center mb-5 group-hover:bg-forest/10 transition-colors">
+                        <svg class="w-6 h-6 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <div class="w-full h-1 bg-forest rounded-full mb-5 opacity-20 group-hover:opacity-100 transition-opacity"></div>
+                    <h3 class="text-xl font-bold text-forest mb-3">Autentificare securizată</h3>
+                    <p class="text-muted leading-relaxed text-sm">
+                        Înregistrare și autentificare protejate cu JWT (JSON Web Tokens) și parole
+                        hashed cu algoritmul bcrypt. Sesiunile expiră automat.
+                    </p>
+                </div>
+
+                <!-- Feature: CRUD -->
+                <div class="group bg-white rounded-2xl p-7 shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 bg-coral/5 rounded-xl flex items-center justify-center mb-5 group-hover:bg-coral/10 transition-colors">
+                        <svg class="w-6 h-6 text-coral" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <div class="w-full h-1 bg-coral rounded-full mb-5 opacity-20 group-hover:opacity-100 transition-opacity"></div>
+                    <h3 class="text-xl font-bold text-forest mb-3">CRUD complet</h3>
+                    <p class="text-muted leading-relaxed text-sm">
+                        Creează, citește, actualizează și șterge sarcini. Marchează sarcinile ca finalizate
+                        și editează titlul sau descrierea oricând.
+                    </p>
+                </div>
+
+                <!-- Feature: Search -->
+                <div class="group bg-white rounded-2xl p-7 shadow-md border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300">
+                    <div class="w-12 h-12 bg-ocean/5 rounded-xl flex items-center justify-center mb-5 group-hover:bg-ocean/10 transition-colors">
+                        <svg class="w-6 h-6 text-ocean" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                    </div>
+                    <div class="w-full h-1 bg-ocean rounded-full mb-5 opacity-20 group-hover:opacity-100 transition-opacity"></div>
+                    <h3 class="text-xl font-bold text-forest mb-3">Filtrare și căutare</h3>
+                    <p class="text-muted leading-relaxed text-sm">
+                        Caută sarcini după titlu în timp real (client-side), fără reîncărcare. Filtrează
+                        rapid sarcinile nefinalizate cu un singur click.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         TECH STACK
+    ====================================================== -->
+    <section id="tehnologii" class="py-20 px-6 bg-gray-50">
+        <div class="max-w-6xl mx-auto">
+            <div class="text-center mb-14">
+                <p class="text-ocean font-semibold text-sm uppercase tracking-widest mb-3">Stack tehnic</p>
+                <h2 class="text-4xl font-extrabold text-forest mb-4">Tehnologii folosite</h2>
+                <p class="text-muted text-lg max-w-xl mx-auto">
+                    Aplicație construită cu unelte moderne, orientate spre performanță și simplitate.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 bg-forest rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <span class="text-gold font-extrabold text-lg">Py</span>
+                    </div>
+                    <p class="font-bold text-forest">FastAPI</p>
+                    <p class="text-muted text-xs mt-1">Backend REST</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 bg-ocean/10 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <svg class="w-8 h-8 text-ocean" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+                        </svg>
+                    </div>
+                    <p class="font-bold text-forest">SQLite</p>
+                    <p class="text-muted text-xs mt-1">Baza de date</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 bg-gold/10 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <span class="text-gold font-extrabold text-sm leading-none">JWT</span>
+                    </div>
+                    <p class="font-bold text-forest">JWT Auth</p>
+                    <p class="text-muted text-xs mt-1">Autentificare</p>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 text-center shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                    <div class="w-14 h-14 bg-coral/10 rounded-xl mx-auto mb-4 flex items-center justify-center">
+                        <svg class="w-7 h-7 text-coral" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12.001 4.8c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624C13.666 10.618 15.027 12 18.001 12c3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C16.337 6.182 14.976 4.8 12.001 4.8zm-6 7.2c-3.2 0-5.2 1.6-6 4.8 1.2-1.6 2.6-2.2 4.2-1.8.913.228 1.565.89 2.288 1.624 1.177 1.194 2.538 2.576 5.512 2.576 3.2 0 5.2-1.6 6-4.8-1.2 1.6-2.6 2.2-4.2 1.8-.913-.228-1.565-.89-2.288-1.624C10.337 13.382 8.976 12 6.001 12z"/>
+                        </svg>
+                    </div>
+                    <p class="font-bold text-forest">Tailwind CSS</p>
+                    <p class="text-muted text-xs mt-1">Interfață UI</p>
+                </div>
+            </div>
+
+            <!-- API Endpoints showcase -->
+            <div class="mt-12 bg-forest rounded-2xl p-8 text-white">
+                <h3 class="font-bold text-lg mb-5 text-gold">Endpoint-uri REST API</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 font-mono text-sm">
+                    <div class="flex items-center gap-3 bg-white/5 rounded-lg px-4 py-2">
+                        <span class="text-ocean font-bold w-14 flex-shrink-0">POST</span>
+                        <span class="text-white/80">/inregistrare</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white/5 rounded-lg px-4 py-2">
+                        <span class="text-ocean font-bold w-14 flex-shrink-0">POST</span>
+                        <span class="text-white/80">/autentificare</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white/5 rounded-lg px-4 py-2">
+                        <span class="text-gold font-bold w-14 flex-shrink-0">GET</span>
+                        <span class="text-white/80">/sarcini</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white/5 rounded-lg px-4 py-2">
+                        <span class="text-ocean font-bold w-14 flex-shrink-0">POST</span>
+                        <span class="text-white/80">/sarcini</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white/5 rounded-lg px-4 py-2">
+                        <span class="text-coral font-bold w-14 flex-shrink-0">PUT</span>
+                        <span class="text-white/80">/sarcini/{'{id}'}</span>
+                    </div>
+                    <div class="flex items-center gap-3 bg-white/5 rounded-lg px-4 py-2">
+                        <span class="text-coral font-bold w-14 flex-shrink-0">DELETE</span>
+                        <span class="text-white/80">/sarcini/{'{id}'}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ======================================================
+         AUTHOR
+    ====================================================== -->
+    <section id="autor" class="py-20 px-6 bg-muted">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center mb-12">
+                <p class="text-ocean font-semibold text-sm uppercase tracking-widest mb-3">Proiect realizat de</p>
+                <h2 class="text-4xl font-extrabold text-white mb-4">Despre autor</h2>
+                <div class="w-16 h-1 bg-gold mx-auto rounded-full"></div>
+            </div>
+
+            <div class="bg-white rounded-3xl shadow-2xl overflow-hidden">
+                <!-- Top color bar -->
+                <div class="h-2 bg-gradient-to-r from-forest via-ocean to-gold"></div>
+
+                <div class="p-8 md:p-12 flex flex-col md:flex-row items-center gap-10">
+                    <!-- Avatar -->
+                    <div class="flex-shrink-0 text-center">
+                        <div class="w-40 h-40 bg-forest rounded-full flex items-center justify-center text-6xl font-extrabold text-gold shadow-xl mx-auto mb-4">
+                            M
+                        </div>
+                        <div class="flex gap-2 justify-center">
+                            <a href="mailto:munteanu.sas@gmail.com"
+                               class="w-9 h-9 rounded-full bg-forest/10 hover:bg-forest/20 flex items-center justify-center transition-colors"
+                               title="Email">
+                                <svg class="w-4 h-4 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                            </a>
+                            <a href="https://github.com"
+                               class="w-9 h-9 rounded-full bg-forest/10 hover:bg-forest/20 flex items-center justify-center transition-colors"
+                               title="GitHub">
+                                <svg class="w-4 h-4 text-forest" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="text-center md:text-left flex-grow">
+                        <h3 class="text-2xl md:text-3xl font-extrabold text-forest mb-1">Munteanu [Prenume]</h3>
+                        <p class="text-ocean font-semibold mb-2">Student · Universitatea "Ștefan cel Mare" din Suceava</p>
+                        <p class="text-muted text-sm mb-5">Facultatea de Inginerie Electrică și Știința Calculatoarelor</p>
+
+                        <p class="text-gray-600 leading-relaxed mb-7 max-w-prose">
+                            Proiect realizat în cadrul cursului <strong class="text-forest">TWAAOS</strong> — Tehnologii Web
+                            și Aplicații pentru Afaceri Online și Sisteme. Laboratorul 5 acoperă construcția unei aplicații
+                            web complete cu autentificare JWT, operații CRUD pe o bază de date SQLite și o interfață
+                            responsivă servită direct de backend-ul FastAPI.
                         </p>
-                    </div>
-                </div>
 
-                <!-- Formularul de autentificare -->
-                <div id="form-autentificare" class="card d-none">
-                    <div class="card-body">
-                        <h5 class="card-title">Autentificare</h5>
-                        <div id="eroare-autentificare" class="alert alert-danger d-none"></div>
-                        <div class="mb-3">
-                            <label class="form-label">Email</label>
-                            <input type="email" id="auth-email" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label">Parolă</label>
-                            <input type="password" id="auth-parola" class="form-control">
-                        </div>
-                        <button class="btn btn-primary w-100" onclick="autentifica()">Conectează-te</button>
-                        <p class="text-center mt-3 mb-0">
-                            Nu ai cont? <a href="#" onclick="comutaFormular(); return false;">Înregistrează-te</a>
-                        </p>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-    <!-- -------- Sectiunea de sarcini -------- -->
-    <div id="sectiune-sarcini" class="d-none">
-
-        <div class="card mb-4">
-            <div class="card-body">
-                <h5 class="card-title">Adaugă o sarcină</h5>
-                <div class="mb-3">
-                    <input type="text" id="sarcina-titlu" class="form-control" placeholder="Titlu">
-                </div>
-                <div class="mb-3">
-                    <textarea id="sarcina-descriere" class="form-control" placeholder="Descriere (opțional)" rows="2"></textarea>
-                </div>
-                <button class="btn btn-success" onclick="adaugaSarcina()">Adaugă</button>
-            </div>
-        </div>
-
-        <!-- TODO B: Checkbox pentru filtru -->
-        <div class="form-check mb-3">
-            <input class="form-check-input" type="checkbox" id="doar-nefinalizate"
-                   onchange="incarcaSarcini()">
-            <label class="form-check-label" for="doar-nefinalizate">
-                Afișează doar sarcinile nefinalizate
-            </label>
-        </div>
-
-        <!-- BONUS: Căutare pe client, fără fetch nou -->
-        <div class="mb-3">
-            <label for="cautare-sarcini" class="form-label">Caută după titlu</label>
-            <input type="text" id="cautare-sarcini" class="form-control"
-                   placeholder="Scrie un titlu..." oninput="filtreazaSarciniClient()">
-        </div>
-
-        <h5>Sarcinile mele</h5>
-        <div id="lista-sarcini"></div>
-
-    </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-    const API = "";
-    let toateSarcinile = [];
-
-    // -------- Gestionarea token-ului --------
-
-    function salveazaToken(token) {
-        localStorage.setItem("token", token);
-    }
-
-    function obtineToken() {
-        return localStorage.getItem("token");
-    }
-
-    function deconecteaza() {
-        localStorage.removeItem("token");
-        toateSarcinile = [];
-        actualizeazaContor([]);
-        actualizeazaUI();
-    }
-
-    // -------- Actualizarea interfetei --------
-
-    function actualizeazaUI() {
-        const token = obtineToken();
-        if (token) {
-            document.getElementById("sectiune-auth").classList.add("d-none");
-            document.getElementById("sectiune-sarcini").classList.remove("d-none");
-            document.getElementById("info-utilizator").classList.remove("d-none");
-            document.getElementById("info-utilizator").classList.add("d-flex");
-            try {
-                const payload = JSON.parse(atob(token.split(".")[1]));
-                document.getElementById("email-utilizator").textContent = payload.sub;
-            } catch (e) { /* token malformat */ }
-            incarcaSarcini();
-        } else {
-            document.getElementById("sectiune-auth").classList.remove("d-none");
-            document.getElementById("sectiune-sarcini").classList.add("d-none");
-            document.getElementById("info-utilizator").classList.add("d-none");
-            document.getElementById("info-utilizator").classList.remove("d-flex");
-        }
-    }
-
-    function comutaFormular() {
-        document.getElementById("form-inregistrare").classList.toggle("d-none");
-        document.getElementById("form-autentificare").classList.toggle("d-none");
-    }
-
-    // -------- Autentificare --------
-
-    async function inregistreaza() {
-        ascundeEroare("eroare-inregistrare");
-        ascundeEroare("succes-inregistrare");
-        const email = document.getElementById("reg-email").value;
-        const parola = document.getElementById("reg-parola").value;
-        try {
-            const raspuns = await fetch(`${API}/inregistrare`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, parola })
-            });
-            if (!raspuns.ok) {
-                const eroare = await raspuns.json();
-                afiseazaEroare("eroare-inregistrare", eroare.detail || "Eroare la înregistrare.");
-                return;
-            }
-            afiseazaSucces("succes-inregistrare", "Cont creat! Te poți autentifica.");
-            setTimeout(comutaFormular, 1500);
-        } catch {
-            afiseazaEroare("eroare-inregistrare", "Nu se poate contacta serverul.");
-        }
-    }
-
-    async function autentifica() {
-        ascundeEroare("eroare-autentificare");
-        const email = document.getElementById("auth-email").value;
-        const parola = document.getElementById("auth-parola").value;
-        const dateFormular = new URLSearchParams();
-        dateFormular.append("username", email);
-        dateFormular.append("password", parola);
-        try {
-            const raspuns = await fetch(`${API}/autentificare`, {
-                method: "POST",
-                body: dateFormular
-            });
-            if (!raspuns.ok) {
-                afiseazaEroare("eroare-autentificare", "Email sau parolă incorecte.");
-                return;
-            }
-            const date = await raspuns.json();
-            salveazaToken(date.access_token);
-            actualizeazaUI();
-        } catch {
-            afiseazaEroare("eroare-autentificare", "Nu se poate contacta serverul.");
-        }
-    }
-
-    // -------- Sarcini --------
-
-    async function incarcaSarcini() {
-        const token = obtineToken();
-        const checkbox = document.getElementById("doar-nefinalizate");
-        const doarNefinalizate = checkbox ? checkbox.checked : false;
-        const url = doarNefinalizate ? `${API}/sarcini?doar_nefinalizate=true` : `${API}/sarcini`;
-
-        try {
-            const raspuns = await fetch(url, {
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-            if (raspuns.status === 401) { deconecteaza(); return; }
-            if (!raspuns.ok) return;
-            toateSarcinile = await raspuns.json();
-            actualizeazaContor(toateSarcinile);
-            filtreazaSarciniClient();
-        } catch {
-            document.getElementById("lista-sarcini").innerHTML =
-                `<div class="alert alert-warning">Nu se poate contacta serverul.</div>`;
-        }
-    }
-
-    function randeazaSarcini(sarcini) {
-        const container = document.getElementById("lista-sarcini");
-        if (sarcini.length === 0) {
-            container.innerHTML = `<p class="text-muted">Nicio sarcină găsită.</p>`;
-            return;
-        }
-
-        container.innerHTML = sarcini.map(s => {
-            const titluSigur = escapeHtml(s.titlu);
-            const descriereSigura = escapeHtml(s.descriere || "");
-            const titluPentruJs = escapeJsString(s.titlu);
-            const descrierePentruJs = escapeJsString(s.descriere || "");
-
-            return `
-                <div class="card mb-2" id="card-sarcina-${s.id}">
-                    <div class="card-body d-flex justify-content-between align-items-start">
-                        <div class="flex-grow-1">
-                            <h6 class="mb-1">
-                                ${titluSigur}
-                                <span class="badge ${s.finalizata ? 'bg-success' : 'bg-secondary'} ms-2">
-                                    ${s.finalizata ? 'Finalizată' : 'În progres'}
-                                </span>
-                            </h6>
-                            <p class="text-muted small mb-0">${descriereSigura}</p>
-                        </div>
-                        <div class="d-flex gap-2 ms-3 flex-shrink-0">
-                            <button class="btn btn-sm btn-outline-primary"
-                                onclick="editeazaSarcina(${s.id}, '${titluPentruJs}', '${descrierePentruJs}')">
-                                Editează
-                            </button>
-                            <button class="btn btn-sm btn-outline-success"
-                                onclick="finalizeazaSarcina(${s.id})" ${s.finalizata ? 'disabled' : ''}>
-                                Finalizează
-                            </button>
-                            <button class="btn btn-sm btn-outline-danger" onclick="stergeSarcina(${s.id})">
-                                Șterge
-                            </button>
+                        <div class="flex flex-wrap gap-2 justify-center md:justify-start">
+                            <span class="bg-forest/8 text-forest px-3.5 py-1.5 rounded-full text-sm font-semibold border border-forest/15">Python</span>
+                            <span class="bg-ocean/10 text-ocean px-3.5 py-1.5 rounded-full text-sm font-semibold border border-ocean/20">FastAPI</span>
+                            <span class="bg-gold/10 text-yellow-700 px-3.5 py-1.5 rounded-full text-sm font-semibold border border-gold/30">JavaScript</span>
+                            <span class="bg-coral/10 text-coral px-3.5 py-1.5 rounded-full text-sm font-semibold border border-coral/20">HTML / CSS</span>
+                            <span class="bg-muted/10 text-muted px-3.5 py-1.5 rounded-full text-sm font-semibold border border-muted/20">SQLite</span>
                         </div>
                     </div>
                 </div>
-            `;
-        }).join("");
-    }
-
-    async function adaugaSarcina() {
-        const titlu = document.getElementById("sarcina-titlu").value.trim();
-        if (!titlu) return;
-        const token = obtineToken();
-        try {
-            const raspuns = await fetch(`${API}/sarcini`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    titlu,
-                    descriere: document.getElementById("sarcina-descriere").value.trim()
-                })
-            });
-            if (raspuns.ok) {
-                document.getElementById("sarcina-titlu").value = "";
-                document.getElementById("sarcina-descriere").value = "";
-                incarcaSarcini();
-            }
-        } catch {
-            alert("Nu se poate contacta serverul. Verificați că uvicorn rulează.");
-        }
-    }
-
-    async function editeazaSarcina(id, titluCurent, descriereCurenta) {
-        const card = document.getElementById(`card-sarcina-${id}`);
-        if (!card) return;
-
-        card.innerHTML = `
-            <div class="card-body">
-                <div class="mb-3">
-                    <label class="form-label">Titlu</label>
-                    <input type="text" id="edit-titlu-${id}" class="form-control" value="${escapeHtml(titluCurent)}">
-                </div>
-                <div class="mb-3">
-                    <label class="form-label">Descriere</label>
-                    <textarea id="edit-descriere-${id}" class="form-control" rows="2">${escapeHtml(descriereCurenta)}</textarea>
-                </div>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-success" onclick="salveazaEditareSarcina(${id})">Salvează</button>
-                    <button class="btn btn-sm btn-secondary" onclick="filtreazaSarciniClient()">Anulează</button>
-                </div>
             </div>
-        `;
-    }
+        </div>
+    </section>
 
-    async function salveazaEditareSarcina(id) {
-        const titlu = document.getElementById(`edit-titlu-${id}`).value.trim();
-        const descriere = document.getElementById(`edit-descriere-${id}`).value.trim();
-        const token = obtineToken();
+    <!-- ======================================================
+         CTA FINAL
+    ====================================================== -->
+    <section class="py-20 px-6 bg-forest text-center">
+        <div class="max-w-2xl mx-auto">
+            <div class="w-16 h-16 bg-gold/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+                <svg class="w-8 h-8 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                </svg>
+            </div>
+            <h2 class="text-4xl font-extrabold text-white mb-4">Gata să începi?</h2>
+            <p class="text-white/60 text-lg mb-10 max-w-lg mx-auto">
+                Creează-ți contul gratuit în câteva secunde și începe să îți organizezi sarcinile.
+            </p>
+            <a href="/app.html"
+               class="inline-block bg-coral hover:bg-coral/90 active:scale-95 text-white px-12 py-4 rounded-xl font-bold text-lg transition-all shadow-xl">
+                Intră în Aplicație →
+            </a>
+        </div>
+    </section>
 
-        if (!titlu) {
-            alert("Titlul nu poate fi gol.");
-            return;
-        }
+    <!-- ======================================================
+         FOOTER
+    ====================================================== -->
+    <footer class="bg-forest border-t border-white/10 py-8 px-6">
+        <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-white/40">
+            <div class="flex items-center gap-2">
+                <div class="w-6 h-6 bg-gold/20 rounded flex items-center justify-center">
+                    <svg class="w-3.5 h-3.5 text-gold" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="text-white/60 font-semibold">TaskFlow</span>
+            </div>
+            <p>© 2025 · Lab 5 TWAAOS · Universitatea "Ștefan cel Mare" din Suceava</p>
+            <a href="/app.html" class="text-ocean hover:text-white transition-colors">Deschide aplicația →</a>
+        </div>
+    </footer>
 
-        try {
-            const raspuns = await fetch(`${API}/sarcini/${id}`, {
-                method: "PUT",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}`
-                },
-                body: JSON.stringify({ titlu, descriere })
-            });
-
-            if (raspuns.ok) {
-                incarcaSarcini();
-            } else {
-                alert("Nu s-a putut salva sarcina.");
-            }
-        } catch {
-            alert("Nu se poate contacta serverul. Verificați că uvicorn rulează.");
-        }
-    }
-
-    async function finalizeazaSarcina(id) {
-        const token = obtineToken();
-        try {
-            const raspuns = await fetch(`${API}/sarcini/${id}/finaliza`, {
-                method: "PATCH",
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-            if (raspuns.ok) incarcaSarcini();
-        } catch {
-            alert("Nu se poate contacta serverul. Verificați că uvicorn rulează.");
-        }
-    }
-
-    async function stergeSarcina(id) {
-        const confirmaStergerea = window.confirm("Ești sigur că vrei să ștergi această sarcină?");
-        if (!confirmaStergerea) return;
-
-        const token = obtineToken();
-        try {
-            const raspuns = await fetch(`${API}/sarcini/${id}`, {
-                method: "DELETE",
-                headers: { "Authorization": `Bearer ${token}` }
-            });
-            if (raspuns.ok) incarcaSarcini();
-        } catch {
-            alert("Nu se poate contacta serverul. Verificați că uvicorn rulează.");
-        }
-    }
-
-    // -------- Bonus --------
-
-    function actualizeazaContor(sarcini) {
-        const total = sarcini.length;
-        const finalizate = sarcini.filter(s => Boolean(s.finalizata)).length;
-        const contor = document.getElementById("contor-sarcini");
-        if (contor) {
-            contor.textContent = `${total} sarcini / ${finalizate} finalizate`;
-        }
-    }
-
-    function filtreazaSarciniClient() {
-        const inputCautare = document.getElementById("cautare-sarcini");
-        const textCautat = inputCautare ? inputCautare.value.trim().toLowerCase() : "";
-
-        const sarciniFiltrate = toateSarcinile.filter(s =>
-            String(s.titlu || "").toLowerCase().includes(textCautat)
-        );
-
-        randeazaSarcini(sarciniFiltrate);
-    }
-
-    // -------- Utilitare --------
-
-    function afiseazaEroare(elementId, mesaj) {
-        const el = document.getElementById(elementId);
-        el.textContent = mesaj;
-        el.classList.remove("d-none");
-    }
-
-    function afiseazaSucces(elementId, mesaj) {
-        const el = document.getElementById(elementId);
-        el.textContent = mesaj;
-        el.classList.remove("d-none");
-    }
-
-    function ascundeEroare(elementId) {
-        document.getElementById(elementId).classList.add("d-none");
-    }
-
-    function escapeHtml(text) {
-        const div = document.createElement("div");
-        div.textContent = String(text);
-        return div.innerHTML;
-    }
-
-    function escapeJsString(text) {
-        return String(text)
-            .replace(/\\/g, "\\\\")
-            .replace(/'/g, "\\'")
-            .replace(/\n/g, "\\n")
-            .replace(/\r/g, "");
-    }
-
-    // -------- Initializare --------
-    document.addEventListener("DOMContentLoaded", actualizeazaUI);
-</script>
 </body>
 </html>

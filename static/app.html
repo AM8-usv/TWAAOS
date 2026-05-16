@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow — Sarcinile Mele</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        forest: '#002400',
+                        coral:  '#db504a',
+                        gold:   '#e3b505',
+                        muted:  '#4f6d7a',
+                        ocean:  '#56a3a6',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body class="font-sans antialiased bg-gray-50 min-h-screen">
+
+<!-- ======================================================
+     NAVBAR
+====================================================== -->
+<nav class="bg-forest sticky top-0 z-50 shadow-lg">
+    <div class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <a href="/" class="flex items-center gap-2 group">
+                <div class="w-7 h-7 bg-gold rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <svg class="w-4 h-4 text-forest" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <span class="text-white font-bold text-lg tracking-tight">TaskFlow</span>
+            </a>
+        </div>
+
+        <!-- User info (shown when logged in) -->
+        <div id="info-utilizator" class="hidden items-center gap-3">
+            <span id="email-utilizator" class="text-white/70 text-sm hidden sm:block truncate max-w-[160px]"></span>
+            <span id="contor-sarcini"
+                  class="bg-white/15 text-white text-xs px-3 py-1 rounded-full font-medium whitespace-nowrap">
+                0 sarcini / 0 finalizate
+            </span>
+            <button onclick="deconecteaza()"
+                    class="border border-white/30 hover:border-white/60 hover:bg-white/10 text-white/80 hover:text-white text-sm px-3 py-1.5 rounded-lg transition-all">
+                Deconectare
+            </button>
+        </div>
+    </div>
+</nav>
+
+<!-- ======================================================
+     MAIN CONTENT
+====================================================== -->
+<main class="max-w-3xl mx-auto px-4 py-10">
+
+    <!-- -------- AUTH SECTION -------- -->
+    <div id="sectiune-auth">
+        <div class="max-w-md mx-auto">
+
+            <!-- Register Form -->
+            <div id="form-inregistrare" class="bg-white rounded-2xl shadow-md p-8">
+                <div class="flex items-center gap-3 mb-7">
+                    <div class="w-10 h-10 bg-forest/5 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                        </svg>
+                    </div>
+                    <h5 class="text-xl font-bold text-forest">Înregistrare</h5>
+                </div>
+
+                <div id="eroare-inregistrare"
+                     class="hidden bg-coral/10 border border-coral/30 text-coral px-4 py-3 rounded-xl mb-5 text-sm font-medium">
+                </div>
+                <div id="succes-inregistrare"
+                     class="hidden bg-ocean/10 border border-ocean/30 text-ocean px-4 py-3 rounded-xl mb-5 text-sm font-medium">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-muted mb-1.5">Email</label>
+                    <input type="email" id="reg-email"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20 transition-all"
+                           placeholder="exemplu@email.com">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-muted mb-1.5">Parolă</label>
+                    <input type="password" id="reg-parola"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20 transition-all"
+                           placeholder="Minim 8 caractere">
+                </div>
+                <button onclick="inregistreaza()"
+                        class="w-full bg-forest hover:bg-forest/90 active:scale-95 text-white py-3 rounded-xl font-bold text-sm transition-all shadow-md">
+                    Creează cont
+                </button>
+                <p class="text-center mt-5 text-sm text-muted">
+                    Ai deja cont?
+                    <a href="#" onclick="comutaFormular(); return false;"
+                       class="text-ocean font-semibold hover:underline">Autentifică-te</a>
+                </p>
+            </div>
+
+            <!-- Login Form -->
+            <div id="form-autentificare" class="hidden bg-white rounded-2xl shadow-md p-8">
+                <div class="flex items-center gap-3 mb-7">
+                    <div class="w-10 h-10 bg-forest/5 rounded-xl flex items-center justify-center">
+                        <svg class="w-5 h-5 text-forest" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                        </svg>
+                    </div>
+                    <h5 class="text-xl font-bold text-forest">Autentificare</h5>
+                </div>
+
+                <div id="eroare-autentificare"
+                     class="hidden bg-coral/10 border border-coral/30 text-coral px-4 py-3 rounded-xl mb-5 text-sm font-medium">
+                </div>
+
+                <div class="mb-4">
+                    <label class="block text-sm font-semibold text-muted mb-1.5">Email</label>
+                    <input type="email" id="auth-email"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20 transition-all"
+                           placeholder="exemplu@email.com">
+                </div>
+                <div class="mb-6">
+                    <label class="block text-sm font-semibold text-muted mb-1.5">Parolă</label>
+                    <input type="password" id="auth-parola"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20 transition-all"
+                           placeholder="Parola ta">
+                </div>
+                <button onclick="autentifica()"
+                        class="w-full bg-forest hover:bg-forest/90 active:scale-95 text-white py-3 rounded-xl font-bold text-sm transition-all shadow-md">
+                    Conectează-te
+                </button>
+                <p class="text-center mt-5 text-sm text-muted">
+                    Nu ai cont?
+                    <a href="#" onclick="comutaFormular(); return false;"
+                       class="text-ocean font-semibold hover:underline">Înregistrează-te</a>
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- -------- TASKS SECTION -------- -->
+    <div id="sectiune-sarcini" class="hidden">
+
+        <!-- Add Task Card -->
+        <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+            <h5 class="text-base font-bold text-forest mb-4 flex items-center gap-2">
+                <svg class="w-4 h-4 text-ocean" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+                </svg>
+                Adaugă o sarcină nouă
+            </h5>
+            <div class="mb-3">
+                <input type="text" id="sarcina-titlu"
+                       class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20 transition-all"
+                       placeholder="Titlul sarcinii...">
+            </div>
+            <div class="mb-4">
+                <textarea id="sarcina-descriere"
+                          class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20 transition-all resize-none"
+                          placeholder="Descriere (opțional)" rows="2"></textarea>
+            </div>
+            <button onclick="adaugaSarcina()"
+                    class="bg-ocean hover:bg-ocean/90 active:scale-95 text-white px-6 py-2.5 rounded-xl font-semibold text-sm transition-all shadow-sm">
+                + Adaugă
+            </button>
+        </div>
+
+        <!-- Filters row -->
+        <div class="flex flex-col sm:flex-row gap-4 mb-6">
+            <!-- Checkbox filter -->
+            <label class="flex items-center gap-2.5 cursor-pointer select-none">
+                <input class="w-4 h-4 rounded accent-ocean cursor-pointer" type="checkbox"
+                       id="doar-nefinalizate" onchange="incarcaSarcini()">
+                <span class="text-sm font-medium text-muted">Doar sarcinile nefinalizate</span>
+            </label>
+
+            <!-- Search -->
+            <div class="flex-1 relative">
+                <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"
+                     fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+                <input type="text" id="cautare-sarcini"
+                       class="w-full border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-sm focus:outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20 transition-all bg-white"
+                       placeholder="Caută după titlu..." oninput="filtreazaSarciniClient()">
+            </div>
+        </div>
+
+        <!-- Task list header -->
+        <div class="flex items-center justify-between mb-4">
+            <h5 class="text-base font-bold text-forest">Sarcinile mele</h5>
+        </div>
+
+        <div id="lista-sarcini"></div>
+
+    </div>
+</main>
+
+<!-- ======================================================
+     JAVASCRIPT (same logic, Bootstrap → Tailwind classes)
+====================================================== -->
+<script>
+    const API = "";
+    let toateSarcinile = [];
+
+    // -------- Token management --------
+
+    function salveazaToken(token) { localStorage.setItem("token", token); }
+    function obtineToken()        { return localStorage.getItem("token"); }
+
+    function deconecteaza() {
+        localStorage.removeItem("token");
+        toateSarcinile = [];
+        actualizeazaContor([]);
+        actualizeazaUI();
+    }
+
+    // -------- UI state --------
+
+    function actualizeazaUI() {
+        const token = obtineToken();
+        const sectiuneAuth    = document.getElementById("sectiune-auth");
+        const sectiuneSarcini = document.getElementById("sectiune-sarcini");
+        const infoUtilizator  = document.getElementById("info-utilizator");
+
+        if (token) {
+            sectiuneAuth.classList.add("hidden");
+            sectiuneSarcini.classList.remove("hidden");
+            infoUtilizator.classList.remove("hidden");
+            infoUtilizator.classList.add("flex");
+            try {
+                const payload = JSON.parse(atob(token.split(".")[1]));
+                document.getElementById("email-utilizator").textContent = payload.sub;
+            } catch (_) {}
+            incarcaSarcini();
+        } else {
+            sectiuneAuth.classList.remove("hidden");
+            sectiuneSarcini.classList.add("hidden");
+            infoUtilizator.classList.add("hidden");
+            infoUtilizator.classList.remove("flex");
+        }
+    }
+
+    function comutaFormular() {
+        document.getElementById("form-inregistrare").classList.toggle("hidden");
+        document.getElementById("form-autentificare").classList.toggle("hidden");
+    }
+
+    // -------- Auth --------
+
+    async function inregistreaza() {
+        ascundeEroare("eroare-inregistrare");
+        ascundeEroare("succes-inregistrare");
+        const email  = document.getElementById("reg-email").value;
+        const parola = document.getElementById("reg-parola").value;
+        try {
+            const raspuns = await fetch(`${API}/inregistrare`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email, parola })
+            });
+            if (!raspuns.ok) {
+                const eroare = await raspuns.json();
+                afiseazaEroare("eroare-inregistrare", eroare.detail || "Eroare la înregistrare.");
+                return;
+            }
+            afiseazaSucces("succes-inregistrare", "Cont creat cu succes! Te poți autentifica.");
+            setTimeout(comutaFormular, 1500);
+        } catch {
+            afiseazaEroare("eroare-inregistrare", "Nu se poate contacta serverul.");
+        }
+    }
+
+    async function autentifica() {
+        ascundeEroare("eroare-autentificare");
+        const email  = document.getElementById("auth-email").value;
+        const parola = document.getElementById("auth-parola").value;
+        const dateFormular = new URLSearchParams();
+        dateFormular.append("username", email);
+        dateFormular.append("password", parola);
+        try {
+            const raspuns = await fetch(`${API}/autentificare`, {
+                method: "POST",
+                body: dateFormular
+            });
+            if (!raspuns.ok) {
+                afiseazaEroare("eroare-autentificare", "Email sau parolă incorecte.");
+                return;
+            }
+            const date = await raspuns.json();
+            salveazaToken(date.access_token);
+            actualizeazaUI();
+        } catch {
+            afiseazaEroare("eroare-autentificare", "Nu se poate contacta serverul.");
+        }
+    }
+
+    // -------- Tasks --------
+
+    async function incarcaSarcini() {
+        const token = obtineToken();
+        const checkbox = document.getElementById("doar-nefinalizate");
+        const doarNefinalizate = checkbox ? checkbox.checked : false;
+        const url = doarNefinalizate ? `${API}/sarcini?doar_nefinalizate=true` : `${API}/sarcini`;
+
+        try {
+            const raspuns = await fetch(url, {
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (raspuns.status === 401) { deconecteaza(); return; }
+            if (!raspuns.ok) return;
+            toateSarcinile = await raspuns.json();
+            actualizeazaContor(toateSarcinile);
+            filtreazaSarciniClient();
+        } catch {
+            document.getElementById("lista-sarcini").innerHTML =
+                `<div class="bg-gold/10 border border-gold/30 text-muted px-4 py-3 rounded-xl text-sm">
+                     Nu se poate contacta serverul.
+                 </div>`;
+        }
+    }
+
+    function randeazaSarcini(sarcini) {
+        const container = document.getElementById("lista-sarcini");
+        if (sarcini.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-14 text-muted">
+                    <svg class="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                              d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                    </svg>
+                    <p class="text-sm font-medium">Nicio sarcină găsită.</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = sarcini.map(s => {
+            const titluSigur       = escapeHtml(s.titlu);
+            const descriereSigura  = escapeHtml(s.descriere || "");
+            const titluPentruJs    = escapeJsString(s.titlu);
+            const descrierePentruJs = escapeJsString(s.descriere || "");
+
+            const badgeClass = s.finalizata
+                ? "bg-ocean/15 text-ocean border border-ocean/25"
+                : "bg-muted/10 text-muted border border-muted/20";
+            const badgeText = s.finalizata ? "Finalizată" : "În progres";
+
+            return `
+                <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-3"
+                     id="card-sarcina-${s.id}">
+                    <div class="p-4 flex gap-4 items-start">
+                        <div class="flex-grow min-w-0">
+                            <div class="flex flex-wrap items-center gap-2 mb-1">
+                                <h6 class="font-semibold text-forest text-sm leading-snug">${titluSigur}</h6>
+                                <span class="text-xs font-medium px-2 py-0.5 rounded-full ${badgeClass}">
+                                    ${badgeText}
+                                </span>
+                            </div>
+                            ${descriereSigura
+                                ? `<p class="text-muted text-xs leading-relaxed">${descriereSigura}</p>`
+                                : ""}
+                        </div>
+                        <div class="flex gap-1.5 flex-shrink-0">
+                            <button onclick="editeazaSarcina(${s.id}, '${titluPentruJs}', '${descrierePentruJs}')"
+                                    class="text-xs border border-muted/40 text-muted hover:bg-muted hover:text-white px-2.5 py-1.5 rounded-lg transition-colors font-medium">
+                                Editează
+                            </button>
+                            <button onclick="finalizeazaSarcina(${s.id})"
+                                    ${s.finalizata ? "disabled" : ""}
+                                    class="text-xs border border-ocean/40 text-ocean hover:bg-ocean hover:text-white px-2.5 py-1.5 rounded-lg transition-colors font-medium disabled:opacity-40 disabled:cursor-not-allowed">
+                                Finalizează
+                            </button>
+                            <button onclick="stergeSarcina(${s.id})"
+                                    class="text-xs border border-coral/40 text-coral hover:bg-coral hover:text-white px-2.5 py-1.5 rounded-lg transition-colors font-medium">
+                                Șterge
+                            </button>
+                        </div>
+                    </div>
+                </div>`;
+        }).join("");
+    }
+
+    async function adaugaSarcina() {
+        const titlu = document.getElementById("sarcina-titlu").value.trim();
+        if (!titlu) return;
+        const token = obtineToken();
+        try {
+            const raspuns = await fetch(`${API}/sarcini`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    titlu,
+                    descriere: document.getElementById("sarcina-descriere").value.trim()
+                })
+            });
+            if (raspuns.ok) {
+                document.getElementById("sarcina-titlu").value = "";
+                document.getElementById("sarcina-descriere").value = "";
+                incarcaSarcini();
+            }
+        } catch {
+            alert("Nu se poate contacta serverul. Verificați că uvicorn rulează.");
+        }
+    }
+
+    async function editeazaSarcina(id, titluCurent, descriereCurenta) {
+        const card = document.getElementById(`card-sarcina-${id}`);
+        if (!card) return;
+        card.innerHTML = `
+            <div class="p-4 w-full">
+                <div class="mb-3">
+                    <label class="block text-xs font-semibold text-muted mb-1.5">Titlu</label>
+                    <input type="text" id="edit-titlu-${id}"
+                           class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20 transition-all"
+                           value="${escapeHtml(titluCurent)}">
+                </div>
+                <div class="mb-4">
+                    <label class="block text-xs font-semibold text-muted mb-1.5">Descriere</label>
+                    <textarea id="edit-descriere-${id}"
+                              class="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-ocean focus:ring-2 focus:ring-ocean/20 transition-all resize-none"
+                              rows="2">${escapeHtml(descriereCurenta)}</textarea>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick="salveazaEditareSarcina(${id})"
+                            class="bg-ocean hover:bg-ocean/90 text-white text-xs px-4 py-2 rounded-lg font-semibold transition-colors">
+                        Salvează
+                    </button>
+                    <button onclick="filtreazaSarciniClient()"
+                            class="bg-gray-100 hover:bg-gray-200 text-muted text-xs px-4 py-2 rounded-lg font-semibold transition-colors">
+                        Anulează
+                    </button>
+                </div>
+            </div>`;
+    }
+
+    async function salveazaEditareSarcina(id) {
+        const titlu    = document.getElementById(`edit-titlu-${id}`).value.trim();
+        const descriere = document.getElementById(`edit-descriere-${id}`).value.trim();
+        const token    = obtineToken();
+        if (!titlu) { alert("Titlul nu poate fi gol."); return; }
+        try {
+            const raspuns = await fetch(`${API}/sarcini/${id}`, {
+                method: "PUT",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ titlu, descriere })
+            });
+            if (raspuns.ok) {
+                incarcaSarcini();
+            } else {
+                alert("Nu s-a putut salva sarcina.");
+            }
+        } catch {
+            alert("Nu se poate contacta serverul. Verificați că uvicorn rulează.");
+        }
+    }
+
+    async function finalizeazaSarcina(id) {
+        const token = obtineToken();
+        try {
+            const raspuns = await fetch(`${API}/sarcini/${id}/finaliza`, {
+                method: "PATCH",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (raspuns.ok) incarcaSarcini();
+        } catch {
+            alert("Nu se poate contacta serverul. Verificați că uvicorn rulează.");
+        }
+    }
+
+    async function stergeSarcina(id) {
+        if (!window.confirm("Ești sigur că vrei să ștergi această sarcină?")) return;
+        const token = obtineToken();
+        try {
+            const raspuns = await fetch(`${API}/sarcini/${id}`, {
+                method: "DELETE",
+                headers: { "Authorization": `Bearer ${token}` }
+            });
+            if (raspuns.ok) incarcaSarcini();
+        } catch {
+            alert("Nu se poate contacta serverul. Verificați că uvicorn rulează.");
+        }
+    }
+
+    // -------- Helpers --------
+
+    function actualizeazaContor(sarcini) {
+        const total      = sarcini.length;
+        const finalizate = sarcini.filter(s => Boolean(s.finalizata)).length;
+        const contor     = document.getElementById("contor-sarcini");
+        if (contor) contor.textContent = `${total} sarcini / ${finalizate} finalizate`;
+    }
+
+    function filtreazaSarciniClient() {
+        const inputCautare = document.getElementById("cautare-sarcini");
+        const textCautat   = inputCautare ? inputCautare.value.trim().toLowerCase() : "";
+        const sarciniFiltrate = toateSarcinile.filter(s =>
+            String(s.titlu || "").toLowerCase().includes(textCautat)
+        );
+        randeazaSarcini(sarciniFiltrate);
+    }
+
+    function afiseazaEroare(elementId, mesaj) {
+        const el = document.getElementById(elementId);
+        el.textContent = mesaj;
+        el.classList.remove("hidden");
+    }
+
+    function afiseazaSucces(elementId, mesaj) {
+        const el = document.getElementById(elementId);
+        el.textContent = mesaj;
+        el.classList.remove("hidden");
+    }
+
+    function ascundeEroare(elementId) {
+        document.getElementById(elementId).classList.add("hidden");
+    }
+
+    function escapeHtml(text) {
+        const div = document.createElement("div");
+        div.textContent = String(text);
+        return div.innerHTML;
+    }
+
+    function escapeJsString(text) {
+        return String(text)
+            .replace(/\\/g, "\\\\")
+            .replace(/'/g, "\\'")
+            .replace(/\n/g, "\\n")
+            .replace(/\r/g, "");
+    }
+
+    // -------- Init --------
+    document.addEventListener("DOMContentLoaded", actualizeazaUI);
+</script>
+</body>
+</html>
